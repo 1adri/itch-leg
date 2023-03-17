@@ -153,9 +153,10 @@ def main_menu(running):
 
 main_menu(True)
 '''
-
-async def main():
-    while True:
+global jordan
+jordan = Player(pygame.display.set_mode((game_width, game_height)), True, pygame.image.load('background.png').convert_alpha(), pygame.image.load('bird.png').convert_alpha(), 200, 370, 3, 160, False, pygame.Rect(0, 0, int(160*1.25), 160), True, False, False, 1, 16, 16)                     
+async def main(running):
+    while running:
         mouse = pygame.mouse.get_pos()
 
         for ev in pygame.event.get():
@@ -169,8 +170,8 @@ async def main():
                 #if the mouse is clicked on the
                 # button the game is terminated
                 if width/2.5 <= mouse[0] <= width/2+45 and height/2.3 <= mouse[1] <= height/2+10:
-                    jordan = Player(pygame.display.set_mode((game_width, game_height)), True, pygame.image.load('background.png').convert_alpha(), pygame.image.load('bird.png').convert_alpha(), 200, 370, 3, 160, False, pygame.Rect(0, 0, int(160*1.25), 160), True, False, False, 1, 16, 16)                     
-                    jordan.main()
+                    while running:
+                        jordan.main()
 
                     
         # fills the screen with a color
@@ -189,11 +190,13 @@ async def main():
         
         # superimposing the text onto our button
         screen.blit(text , (width/2.325,height/2.27))
-        await asyncio.sleep(0)  # Very important, and keep it 0
 
         # updates the frames of the game
         pygame.display.update()
-asyncio.run(main())
+        await asyncio.sleep(0)  # Very important, and keep it 0
+
+
+asyncio.run(main(True))
 
 
 #jordan = Player(pygame.display.set_mode((game_width, game_height)), True, pygame.image.load('background.png').convert_alpha(), pygame.image.load('bird.png').convert_alpha(), 200, 370, 3, 160, False, pygame.Rect(0, 0, int(160*1.25), 160), True, False, False, 1, 16, 16)                     
