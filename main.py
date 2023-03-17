@@ -1,4 +1,5 @@
- # Import Modules for the Game
+#Done slight changes to code and works for me:
+
 import pygame
 import asyncio
 
@@ -37,7 +38,7 @@ width = screen.get_width()
 height = screen.get_height()
   
 # defining a font
-smallfont = pygame.font.SysFont('Corbel',35)
+smallfont = pygame.font.Font('aachen.ttf',35)
   
 # rendering a text written in
 # this font
@@ -78,8 +79,9 @@ class Player:
         self.JUMP_HEIGHT = JUMP_HEIGHT
         self.Y_VELOCITY = Y_VELOCITY
 
-    def main(self):
-    # Everything under 'while running' will be repeated over and over again
+    async def main(self):
+        # Everything under 'while running' will be repeated over and over again
+        self.running = True
         while self.running:
             keys = pygame.key.get_pressed()
 
@@ -87,8 +89,9 @@ class Player:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     self.running = False
+                    pygame.quit()
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_w:
                         self.jumping = True
                 
@@ -138,7 +141,8 @@ class Player:
             # Update Screen
             pygame.display.update()
             clock.tick(50)
-            #pygame.display.set_caption("FPS: " + str(clock.get_fps()))
+            await asyncio.sleep(0)
+            pygame.display.set_caption("FPS: " + str(clock.get_fps()))
 
 '''
 def main_menu(running):
@@ -153,27 +157,25 @@ def main_menu(running):
 
 main_menu(True)
 '''
-global jordan
 jordan = Player(pygame.display.set_mode((game_width, game_height)), True, pygame.image.load('background.png').convert_alpha(), pygame.image.load('bird.png').convert_alpha(), 200, 370, 3, 160, False, pygame.Rect(0, 0, int(160*1.25), 160), True, False, False, 1, 16, 16)                     
-async def main(running):
+async def main():
+    running = True
     while running:
         mouse = pygame.mouse.get_pos()
 
         for ev in pygame.event.get():
-            
             if ev.type == pygame.QUIT:
-                pygame.quit()
+                running = False
+            if ev.type == pygame.KEYDOWN and ev.key == pygame.K_ESCAPE:
+                running = False
                 
             #checks if a mouse is clicked
             if ev.type == pygame.MOUSEBUTTONDOWN:
-                
                 #if the mouse is clicked on the
                 # button the game is terminated
                 if width/2.5 <= mouse[0] <= width/2+45 and height/2.3 <= mouse[1] <= height/2+10:
-                    while running:
-                        jordan.main()
+                    await jordan.main()
 
-                    
         # fills the screen with a color
         screen.fill((190,0,50))
         
@@ -189,17 +191,17 @@ async def main(running):
             pygame.draw.rect(screen,color_dark,[width/2.5,height/2.3,140,40])
         
         # superimposing the text onto our button
-        screen.blit(text , (width/2.325,height/2.27))
+        screen.blit(text, (width/2.325,height/2.27))
 
         # updates the frames of the game
         pygame.display.update()
         await asyncio.sleep(0)  # Very important, and keep it 0
+    #pygame.quit()
 
 
-asyncio.run(main(True))
+asyncio.run(main())
 
+#[Diff](https://diffy.org/diff/3626b7ae7b5fc)
 
-#jordan = Player(pygame.display.set_mode((game_width, game_height)), True, pygame.image.load('background.png').convert_alpha(), pygame.image.load('bird.png').convert_alpha(), 200, 370, 3, 160, False, pygame.Rect(0, 0, int(160*1.25), 160), True, False, False, 1, 16, 16)                     
-#asyncio.run(jordan.main())
-
-
+#What did I change?
+#Game loop also needs to be asynchronous, otherwise the window wouldn't be refreshed.
