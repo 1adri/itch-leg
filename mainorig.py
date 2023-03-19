@@ -55,19 +55,20 @@ class Basketball:
 
         if self.player_facing_left:
             self.screen.blit(self.basketball, (self.player_x-7, self.player_y+75))
-
+            global basketball_pos
+            basketball_pos = (self.player_x-7, self.player_y+75)
 
         else:
             self.screen.blit(self.basketball, (self.player_x+80, self.player_y+75))
-    '''
+            basketball_pos = (self.player_x+80, self.player_y+75)
     def shoot(self):
         if self.player_facing_left:
             self.screen.blit(self.basketball, (basketball_pos[0]-50, basketball_pos[1]-50))
 
         else:
-            self.screen.blit(self.basketball, (basketball_pos[0]+70, basketball_pos[1]+70))
-                            jordan = Player(pygame.display.set_mode((game_width, game_height)), True, pygame.image.load('background.png').convert_alpha(), pygame.image.load('bird.png').convert_alpha(), 200, 370, 3, 160, False, pygame.Rect(0, 0, int(160*1.25), 160), True, False, False, 1, 16, 16)                     
-    '''
+            self.screen.blit(self.basketball, (basketball_pos[0]+28, basketball_pos[1]-27))
+                            #jordan = Player(pygame.display.set_mode((game_width, game_height)), True, pygame.image.load('background.png').convert_alpha(), pygame.image.load('bird.png').convert_alpha(), 200, 370, 3, 160, False, pygame.Rect(0, 0, int(160*1.25), 160), True, False, False, 1, 16, 16)                     
+    
 class Player:
     def __init__(self, screen, running, background, player, player_x, player_y, player_speed, player_size, player_facing_left, player_hitbox, player_alive, isjump, jumping,  Y_GRAVITY, JUMP_HEIGHT, Y_VELOCITY):
         self.screen = screen
@@ -89,8 +90,11 @@ class Player:
 
     def main(self):
     # Everything under 'while running' will be repeated over and over again
+            self.screen.blit(self.background, (0, 0))
+
             keys = pygame.key.get_pressed()
             basketball = Basketball(self.screen, self.running, pygame.image.load('basketball.png').convert_alpha(), self.player_x, self.player_y, self.player_facing_left)
+            basketball.main()
 
             # Makes the game stop if the player clicks the X or presses esc
             for event in pygame.event.get():
@@ -101,13 +105,14 @@ class Player:
                     pygame.quit()
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_w:
                         self.jumping = True
-                #if event.type == pygame.KEYDOWN and event.key == pygame.K_l:
-                        #basketball.shoot()
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+                        basketball.shoot()
+
             if keys[pygame.K_a]:
                 self.player_x -= self.player_speed
                 self.player_facing_left = True
-            if keys[pygame.K_b]:
-                basketball.shoot()
+            #if keys[pygame.K_b]:
+                #basketball.shoot()
                 #player_y += player_speed
             if keys[pygame.K_LSHIFT]:
                 if keys[pygame.K_d]:
@@ -120,7 +125,6 @@ class Player:
                 self.player_x += self.player_speed
                 self.player_facing_left = False
 
-            self.screen.blit(self.background, (0, 0))
 
             if self.jumping:
                 self.player_y -= self.Y_VELOCITY
@@ -138,8 +142,7 @@ class Player:
             if self.player_facing_left:
                 player_small = pygame.transform.flip(player_small, True, False)
             screen.blit(player_small, (self.player_x, self.player_y))
-
-            basketball.main()
+            
 
 
             #merged = self.player.copy()
