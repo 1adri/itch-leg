@@ -50,8 +50,8 @@ motion2 = False
 basketball_image = pygame.image.load('basketball.png')
 
 # Set the starting position of the basketball
-basketball_x1 = 0
-basketball_y1 = 0
+basketball_x1 = 315
+basketball_y1 = 400
 
 # Set the initial velocity of the basketball
 basketball_velocity_x = 0
@@ -93,16 +93,13 @@ class Basketball:
                 self.basketball_y = self.player_y+70
                 self.screen.blit(self.basketball, (self.basketball_x, self.basketball_y))
         else:
-            global tup
+
             tup = (self.player_x, self.player_y)
-            #print(self.player_x, self.player_y)
+            print(tup[0], "tupp")
             global basketball_x1, basketball_y1
             global basketball_velocity_x, basketball_velocity_y
             basketball_x1 = tup[0]
-            basketball_y1 = tup[1]
-            #basketball_x1 = self.player_x
-            #basketball_y1 = self.player_y
-            #print(basketball_x1, "hi")
+            basketball_y1=  tup[1]
             basketball_x1 += basketball_velocity_x
             basketball_y1 += basketball_velocity_y
             # Apply gravity to the basketball
@@ -110,7 +107,7 @@ class Basketball:
 
             # Draw the screen
             screen.blit(self.basketball, (basketball_x1, basketball_y1))  # Draw the basketball
-            #print(basketball_x1)
+            print(basketball_x1, basketball_y1)
     def shoot(self):
 
         vx = 15
